@@ -264,7 +264,7 @@ set helplang=cn
 " 总是显示状态行
 set laststatus=2
 " 命令行（在状态行下）的高度，默认为1，这里是2
-set cmdheight=2
+set cmdheight=1
 " 侦测文件类型
 filetype on
 " 载入文件类型插件
