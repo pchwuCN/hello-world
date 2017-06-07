@@ -18,7 +18,7 @@ def download(url, user_agent='wdwp', num_retry=2):
 
 def crawl_sitemap(url):
     sitemap = download(url)
-    links = re.findall('<a href=(.*?)>', sitemap)
+    links = re.findall('<a href=("http.*?)[ >]', sitemap)
     #print sitemap
     for link in links:
         #html = download(link)
