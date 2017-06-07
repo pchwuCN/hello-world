@@ -7,3 +7,6 @@ cd ~/.vim
 tar -zxvf ./vimplugin.gz
 cd -
 #end
+
+#git配置快捷命令
+cp ./.gitconfig ~/.gitconfig

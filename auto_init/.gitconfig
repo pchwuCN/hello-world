@@ -1,0 +1,16 @@
+[alias]
+	st = status
+	ps = push
+    b = branch
+    c = commit
+    r = reset
+    sa = stash
+    cl = clone
+    co = checkout
+    rs= reset --soft
+    rm= reset --merge
+    rH= reset HEAD
+    rh= reset --hard HEAD~
+    sp= stash pop
+    ss= stash apply stash@{0}
+    save= stash save    
