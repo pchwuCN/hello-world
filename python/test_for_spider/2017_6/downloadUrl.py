@@ -1,12 +1,14 @@
 import urllib2
 import re
+import time 
+
 def download(url, user_agent='wdwp', num_retry=2):
     print("Downloading: ", url)
     headers = {'User-agent': user_agent}
     request = urllib2.Request(url, headers=headers)
     try:
         html = urllib2.urlopen(request).read()
-
+        time.sleep(0.4)
     except urllib2.URLError as e:
         print('Download error : ', e.reason)
         html = None
@@ -29,4 +31,4 @@ def crawl_sitemap(url):
 #download("http://www.meetup.com")
 #download("http://httpstat.us/500", 5)
 if __name__ == "__main__":
-    crawl_sitemap('http://www.hao123.com')
+    print download('http://example.webscraping.com/robot.txt')
