@@ -14,3 +14,5 @@
     sp= stash pop
     ss= stash apply stash@{0}
     save= stash save    
+[commit]
+     template = ~/CommitTemplate
