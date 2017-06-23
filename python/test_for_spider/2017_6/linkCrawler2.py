@@ -14,12 +14,26 @@ from datetime import datetime
 import robotparser
 import Queue
 import lxml
+import csv
 
 
+FIELDS= {'area', 'population', 'iso', 'country', 'capital', 'continent', 'tld', 'currency_code'}
 
-FIELDS= {'area', 'population', 'iso', 'country', 'capital', 'continent', 'tid', 'currency_code'}
+class ScrapeCallback:
+    def __init__(self):
+        self.writer = csv.writer(open('countries.csv', 'w'))
 
+        self.fields = ('area', 'population', 'iso', 'country', 'capital', 'continent', 'tld', 'currency_code', 'currency_name', 'phone', 'postal_code_format', 'postal_code_regex', 'languages', 'neighbours')
 
+        self.writer.writerow(self.fields)
+
+    def __call__(self, url, html):
+        if re.search('/view/', url):
+            tree = lxml.html.fromstring(html)
+            row = []
+            for field in self.fields:
+                row.append(tree.cssselect('table > tr#places_{}__row > td.w2p_fw'.format(field))[0].text_content())
+            self.writer.writerow(row)
 
 def link_crawler(seed_url, link_regex=None, delay=5, max_depth=-1, max_urls=-1, headers=None, user_agent='wswp', proxy=None, num_retries=1, scrape_callback=None):
     """Crawl from the given seed URL following links matched by link_regex
@@ -44,7 +58,7 @@ def link_crawler(seed_url, link_regex=None, delay=5, max_depth=-1, max_urls=-1, 
             html = download(url, headers, proxy=proxy, num_retries=num_retries)
             links = []
             if scrape_callback:
-                links.extend(scrape_callback(html) or [])
+                links.extend(scrape_callback(url, html) or [])
                 print links
             depth = seen[url]
             if depth != max_depth:
@@ -151,13 +165,15 @@ def lxml_scraper(html):
     tree = lxml.html.fromstring(html)
     results = {}
     for field in FIELDS:
-        print field
-        #results[field] = tree.cssselect('table > tr#place_%s_row > td.w2p_fw' % field)[0].text_content()
-        print tree.cssselect('table > tr#place_%s_row > td.w2p_fw' % field)
-        return results
+        try:
+            results[field] = tree.cssselect('table > tr#places_%s__row > td.w2p_fw' % field)[0].text_content()
+            #print tree.cssselect('table > tr#place_%s_row > td.w2p_fw' % field)
+        except:
+            pass
+    return results
 
 
 if __name__ == '__main__':
     #link_crawler('http://example.webscraping.com', '/(index|view)', delay=0, num_retries=1, user_agent='BadCrawler')
-    link_crawler('http://example.webscraping.com', '/(index|view)', delay=0, num_retries=1, max_depth=1, user_agent='GoodCrawler', scrape_callback=lxml_scraper)
+    link_crawler('http://example.webscraping.com', '/(index|view)', delay=0, num_retries=1, max_depth=1, user_agent='GoodCrawler', scrape_callback=ScrapeCallback())
 
