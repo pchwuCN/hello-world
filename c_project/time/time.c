@@ -10,7 +10,7 @@ void getCurTime(char *time_str, int len)
 
     time ( &rawtime );
     timeinfo = localtime ( &rawtime );
-    strftime ( time_str,80,"%a %b %d %H:%M:%S %Y",timeinfo);
+    strftime ( time_str,80,"%Y-%m-%d %H:%M:%S",timeinfo);
 }
 
 int main()
